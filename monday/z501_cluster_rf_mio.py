@@ -1,4 +1,18 @@
-"""Perfiles de clientes BAJA+2 con Random Forest: genera clusters_tendencias.pdf.
+"""Notas de trabajo:
+Usamos random forest para ver que clientes van cayendo en cada hoja
+los clientes empiezan a caer en las mismas hojas en los distintos arboles
+cada hoja lleva el nombre de un atributo
+
+clustering:
+una visión de partición mas que de clustering
+uno no va a separar.. no sirve cilluette...
+la maldición de la dimensionalidad
+
+quiero hacer una matriz sobre la que pueda medir la distancia
+
+---
+
+Perfiles de clientes BAJA+2 con Random Forest: genera clusters_tendencias.pdf.
 
 Requisitos: Python 3.12+ y
     pip install duckdb pandas numpy scikit-learn matplotlib
@@ -274,11 +288,11 @@ def pdf_tendencias(tend: pd.DataFrame, atributos: list[str], atributos_def: pd.D
             if len(define):
                 quien = "; ".join(f"cluster_{r[CLUSTER_COL]} (lift {r['lift']:.2f}, rank {r['rank']})" for _, r in define.iterrows())
                 rol = f"Define a {quien}."
-            elif attr in lift_all.columns:
+            elif attr in lift_all.columns and lift_all[attr].notna().any():
                 c_max = lift_all[attr].idxmax()
                 rol = f"No es definitorio de ningún cluster (mayor lift: cluster_{c_max}, {lift_all.loc[c_max, attr]:.2f})."
             else:
-                rol = "Nunca definió una hoja del bosque."
+                rol = "Nunca definió una hoja para ningún cliente BAJA+2."
             fig.text(0.07, 0.925, f"{rol}\nLínea = {ctx['centro']} mensual entre los clientes del cluster presentes ese mes; "
                      f"banda = {ctx['banda_desc']}, recortada al rango observado.", fontsize=10, color=INK_2, va="top", linespacing=1.4)
 
@@ -366,7 +380,7 @@ def main() -> None:
     )
     log(f"generando PDF ({len(atributos_pdf) + 1} páginas)")
     pdf_tendencias(tend, atributos_pdf, attrs_def, lift_all, meses, args.out, ctx)
-    log(f"listo → {args.out}")
+    log(f"listo -> {args.out}")
 
 
 if __name__ == "__main__":
