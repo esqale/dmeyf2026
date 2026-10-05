@@ -182,3 +182,11 @@ project/target
 .worksheet
 
 .vscode/settings.json
+
+#######################################
+# Datasets y artefactos grandes/regenerables (monday/)
+#######################################
+monday/data/
+monday/competencia_01_crudo.csv
+monday/modelos/
+monday/perfiles_baja2/
