@@ -536,7 +536,7 @@ flowchart TD
       <tr><td>Rankings dentro del mes con cero fijo (agregados a todo lo demás)</td><td>−2,1M</td><td>4/10</td><td>❌ no suman sobre lo que ya hay</td></tr>
       <tr><td>Re-búsqueda de hiperparámetros sobre el dataset final</td><td>−0,2M</td><td>4/10</td><td>❌ no se encontró mejora</td></tr>
       <tr><td>Marca de aguinaldo (<code>cobra_aguinaldo</code>, <code>mpayroll_sin_sac</code>)</td><td>−2,9M</td><td>4/10</td><td>⚠️ <strong>no evaluable</strong> (ver abajo)</td></tr>
-      <tr><td><code>ma_3</code>/<code>slope_3</code> en NULL con menos de 3 meses de historia</td><td>+4,2M</td><td>9/10</td><td>⏳ <strong>en evaluación</strong> (ver abajo)</td></tr>
+      <tr><td><code>ma_3</code>/<code>slope_3</code> en NULL con menos de 3 meses de historia</td><td>+4,2M</td><td>9/10</td><td>❌ debajo del umbral; en el público tampoco alcanzó (ver abajo)</td></tr>
     </tbody>
   </table>
 
@@ -544,13 +544,13 @@ flowchart TD
     <strong>⚠️ Por qué el aguinaldo no es evaluable:</strong> la marca solo puede valer 1 en junio y diciembre, y el entrenamiento de la validación (202103–04) no tiene ninguno de los dos meses. El modelo no tenía forma de aprender la variable, así que el −2,9M es ruido y no dice nada sobre si sirve en el modelo final, que sí entrena con junio.
   </div>
 
-  <h3>Experimento en curso: <code>ma_3</code> y <code>slope_3</code> con historia completa</h3>
+  <h3>Último experimento: <code>ma_3</code> y <code>slope_3</code> con historia completa</h3>
   <p>El dataset empieza en 202103, así que en 202103 la "media de 3 meses" promedia 1 mes y en 202104 promedia 2; recién desde 202105 son 3 meses de verdad (lo mismo con la pendiente). El arreglo deja <code>ma_3_*</code> y <code>slope_3_*</code> en <code>NULL</code> cuando el cliente tiene menos de 3 meses de historia. Afecta sobre todo a lo que el modelo aprende de 202103–04; en 202108 casi todos los clientes tienen 3 meses y sus valores no cambian.</p>
   <ul>
     <li><strong>Validación:</strong> +4,2M y gana en 9 de 10 semillas. Muy consistente, pero debajo del umbral de 5M de la regla.</li>
     <li><strong>Desempate en el público, con la regla fijada antes de mirar:</strong> se entrena el modelo final con el arreglo (20 semillas) y se envían los 20 archivos con N = 12.000. <strong>Se adopta solo si la media pública es ≥ 103,1</strong>, es decir, al menos +1,0 sobre el modelo actual en ese corte (~102,1, promedio de 101,93 y 102,19).</li>
     <li><strong>Si se adopta:</strong> se activa <code>MA3_COMPLETO = True</code> en <code>config.py</code> (afecta solo a <code>fe_final</code>; los hiperparámetros no cambian) y el archivo promedio de ese modelo pasa a ser la entrega.</li>
-    <li><strong>Resultado:</strong> <em>pendiente</em>.</li>
+    <li><strong>Resultado: no se adopta.</strong> En el público, con 20 archivos en N = 12.000, dio <strong>102,43 ± 2,30</strong>, debajo del umbral de 103,1. La mejora de validación no se trasladó a 202108. El arreglo queda en el código, apagado (<code>MA3_COMPLETO = False</code>), y la entrega sigue siendo el modelo anterior.</li>
   </ul>
 
 </body>

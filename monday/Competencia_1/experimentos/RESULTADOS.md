@@ -22,7 +22,7 @@ Script: `experimentos/variantes.py`.
 | target solo BAJA+2 | positivo = solo BAJA+2 | 389,3M | −31,7M | 0/10 | ❌ |
 | BAJA+1 con peso 0,25 | positivo = BAJA+1 + BAJA+2, filas BAJA+1 con peso 0,25 | 413,2M | −7,8M | 0/10 | ❌ |
 | sin 202103 | entrenar solo con 202104 (202103 no tiene lags) | 416,6M | −4,4M | 3/10 | ❌ |
-| `ma_3`/`slope_3` completos | NULL si el cliente tiene menos de 3 meses de historia | 425,1M | +4,2M | 9/10 | ⚠️ debajo del umbral de 5M → se mide en el público (ver abajo) |
+| `ma_3`/`slope_3` completos | NULL si el cliente tiene menos de 3 meses de historia | 425,1M | +4,2M | 9/10 | ❌ debajo del umbral de 5M; en el público 102,43 (umbral 103,1) |
 
 Lectura:
 - Lo que más aportó fue darle al modelo **la tendencia de cada variable** (lag y delta de todas).
@@ -53,3 +53,14 @@ Mismo modelo, 20 archivos por punto (uno por semilla), ganancia pública media:
 11.500 y 12.500 empatan (la diferencia es menor que el error de la media). Se tomó 12.000, el centro de la meseta de validación (11.000–13.000), y se entrega el promedio de las 20 semillas.
 
 El 107,47 es **un solo archivo** sobre ~25% de 202108. Es compatible con que el promedio de semillas rinda más que cada semilla suelta, pero no lo prueba: puede incluir ruido de la muestra pública.
+
+## `ma_3` / `slope_3` con historia completa: desempate en el público
+
+En validación dio +4,2M y ganó en 9/10, debajo del umbral de 5M. Se desempató en el público con una regla fijada antes de mirar: entrenar el final con el arreglo (`python experimentos/variantes.py --final ma3_completo`) y adoptarlo solo si la media de los 20 archivos en N = 12.000 era ≥ 103,1 (+1,0 sobre ~102,1, el promedio del modelo actual en 11.500 y 12.500).
+
+| Modelo (20 archivos, uno por semilla) | N | Público |
+|---|---|---|
+| Modelo entregado | 11.500 / 12.500 | 101,93 ± 2,79 / 102,19 ± 2,55 |
+| Con `ma_3`/`slope_3` completos | 12.000 | 102,43 ± 2,30 |
+
+**No se adopta.** En el público, con 20 archivos en N = 12.000, dio **102,43 ± 2,30**, debajo del umbral fijado antes de mirar (≥ 103,1, es decir +1,0 sobre ~102,1 del modelo actual en ese corte). La mejora de validación (+4,2M, 9/10) no se trasladó a 202108.
