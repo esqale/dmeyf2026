@@ -2,7 +2,7 @@
 
 Alejandro Esquivel
 
-Predicción de clientes **BAJA+2** del Paquete Premium para la foto **202108**: los que siguen en 202109 y ya no están en 202110. La campaña de retención estimula a los **12.000** clientes con mayor probabilidad.
+Predicción de los clientes **BAJA+2** del Paquete Premium en la foto **202108**: los que se van a dar de baja **dentro de 2 meses** (siguen siendo clientes en 202109, por lo que no son BAJA+1, y ya no están en 202110). La campaña de retención estimula a los **12.000** clientes con mayor probabilidad de ser BAJA+2.
 
 | | |
 |---|---|
@@ -70,6 +70,7 @@ Con la regla de adopción fijada antes de medir (≥ 5M y gana en ≥ 7 de 10 se
 | Target BAJA+1 + BAJA+2 con BAJA+1 de peso 0,25 | −7,8M, 0/10 |
 | Undersampling de CONTINUA (25% por semilla) | −7,5M, 2/10 |
 | Entrenar sin 202103 (primer mes, sin lags) | −4,4M, 3/10 |
+| `ma_3`/`slope_3` en NULL con menos de 3 meses de historia | +4,2M, 9/10 (debajo de 5M); en el público 102,43, debajo del umbral fijado de 103,1 |
 | Rankings dentro del mes con cero fijo | −2,1M, 4/10 |
 | Re-búsqueda de hiperparámetros sobre el dataset final | −0,2M, 4/10 |
 | Marca de aguinaldo | no evaluable con la ventana de validación (sin junio en el entrenamiento) |
@@ -77,7 +78,14 @@ Con la regla de adopción fijada antes de medir (≥ 5M y gana en ≥ 7 de 10 se
 
 Las limitaciones conocidas de la metodología (una sola ventana de validación, meses sin historia en el entrenamiento, sesgos de la búsqueda) están en `docs/DECISIONES.md` (D15).
 
-Detalle en `experimentos/RESULTADOS.md`.
+Detalle en `experimentos/RESULTADOS.md`. Para reproducirlos (requieren haber corrido `p1` y `p2`):
+
+```bash
+python experimentos/variantes.py --variantes referencia solo_baja2 peso_baja1 sin_202103 ma3_completo
+python experimentos/variantes.py --variantes aguinaldo rank_cero undersampling busqueda_final
+python experimentos/variantes.py --final ma3_completo     # modelo final de una variante, para el público
+python experimentos/rf_linea_base.py                      # Random Forest (lento)
+```
 
 ## Reproducibilidad
 

@@ -5,7 +5,7 @@ Qué se decidió, por qué y qué se descartó. Los números de cada experimento
 ---
 
 ## D1 — Qué se predice y en qué formato
-- Clientes de la foto **202108** que van a ser **BAJA+2**: siguen en 202109 y ya no están en 202110. A los BAJA+1 se llega tarde para la campaña de retención.
+- Clientes de la foto **202108** que van a ser **BAJA+2**, es decir, que se dan de baja **dentro de 2 meses**: siguen siendo clientes en 202109 (no son BAJA+1) y ya no están en 202110. A los BAJA+1 se llega tarde para la campaña de retención.
 - Ganancia: +1.072.500 por cada BAJA+2 estimulado y −27.500 por cualquier otro estimulado.
 - Entrega: CSV con solo `numero_de_cliente`, sin encabezado, enteros, entre 8.000 y 15.000 filas. Por eso se elige una **cantidad de envíos N** (los N de mayor probabilidad), no un umbral.
 
@@ -75,3 +75,8 @@ Qué se decidió, por qué y qué se descartó. Los números de cada experimento
 - Optuna optimiza el máximo de la curva suavizada (un objetivo optimista) con 30 trials para 7 hiperparámetros: la búsqueda tiene poca cobertura.
 - `comparar` evalúa cada variante en su propio N, lo que le da un margen chico de selección a la variante.
 - `lag` y las ventanas cuentan filas, no meses: para los 23 clientes con algún mes faltante, "el mes anterior" no es el mes calendario anterior. Impacto despreciable.
+
+## D16 — No se adopta `ma_3`/`slope_3` con historia completa
+- Validación: +4,2M y gana en 9/10, debajo del umbral de D9 (5M).
+- Desempate en el público con la regla fijada antes de mirar: adoptar solo si la media de 20 archivos en N = 12.000 es ≥ 103,1. Dio 102,43 ± 2,30.
+- Queda disponible en el código, apagado (`config.MA3_COMPLETO = False`).
