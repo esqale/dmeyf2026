@@ -67,6 +67,7 @@ Qué se decidió, por qué y qué se descartó. Los números de cada experimento
 - Filas ordenadas por (`foto_mes`, `numero_de_cliente`), un `lgb.Dataset` nuevo por semilla (LightGBM arma los bins muestreando con la semilla), `deterministic=True`, 16 hilos fijos, pool fijo de semillas (`RandomState(17)`).
 - `numero_de_cliente` viene del crudo como DOUBLE: se castea a entero **antes** de bajar el resto de las columnas a float32. Sin esto float32 redondea los ids de más de 16,7 millones (pasó en un primer envío y el bot lo rechazó).
 - `p6_entrega.py` verifica filas, ids únicos y existentes en 202108 y formato, y compara el SHA-256 con el del archivo entregado.
+- **Verificado el 11/10/2026:** la corrida de punta a punta (`correr_todo.py --sin-busqueda`, desde el crudo) reprodujo el archivo entregado con el mismo SHA-256, y `p3` desde cero encontró los mismos hiperparámetros.
 
 ## D15 — Limitaciones conocidas
 - **Una sola ventana de validación (202106).** Las comparaciones pareadas reducen el ruido entre variantes, pero no protegen contra decisiones que solo valen para junio (un mes con aguinaldo). La ganancia absoluta en 202106 tiene una incertidumbre de ~±30M solo por qué clientes caen en ese mes (~680 BAJA+2 en el top). El público de 202108 se usó como segundo control independiente.
