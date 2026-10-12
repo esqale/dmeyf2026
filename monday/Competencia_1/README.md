@@ -89,4 +89,6 @@ python experimentos/rf_linea_base.py                      # Random Forest (lento
 
 ## Reproducibilidad
 
-Con las versiones de `requirements.txt` (Python 3.13, LightGBM 4.7.0) y 16 hilos, el pipeline reproduce el archivo entregado bit a bit. Con otra cantidad de hilos o de versión, LightGBM puede cambiar los últimos decimales de las probabilidades. En el corte, la distancia entre el cliente 12.000 y el 12.001 es de 1,2e-5, así que no debería cambiar la lista. Detalle en `docs/DECISIONES.md` (D14).
+**Verificado el 11/10/2026:** `python correr_todo.py --sin-busqueda`, desde el crudo y con `salida/` vacía, generó un archivo idéntico al entregado (mismo SHA-256) y la misma validación (421,0M, meseta 11.000–13.000). La búsqueda de Optuna (`p3`) se verificó por separado ese mismo día: desde cero encontró exactamente los hiperparámetros de `params/mejores_params.json`.
+
+Versiones usadas: las de `requirements.txt` (Python 3.13, LightGBM 4.7.0), con 16 hilos. Con otra cantidad de hilos o de versión, LightGBM puede cambiar los últimos decimales de las probabilidades. En el corte, la distancia entre el cliente 12.000 y el 12.001 es de 1,2e-5, así que no debería cambiar la lista. Detalle en `docs/DECISIONES.md` (D14).
